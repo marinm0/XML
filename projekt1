@@ -1,0 +1,60 @@
+<?php
+$username="";
+$password="";
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+    $ans=$_POST;
+
+    if ((empty($ans["username"])) || (empty($ans["password"]))) {
+        echo "Ispunite polja";
+    }else{
+        $username=$ans["username"];
+        $password=$ans["password"];
+
+        kreiraj($username,$password);
+    }
+}
+function kreiraj($username, $password){
+$xml=simplexml_load_file("users.xml");
+    foreach ($xml->user as $user){
+        $user_name = $user->username;
+        $pass_word = $user->password;
+        if($user_name==$username){
+           echo "Upisali ste postojećeg korisnika";
+        }
+    }
+    $child = $xml->addChild("user");
+    $child->addChild("username", $username);
+    $child->addChild("password", $password);
+    $doc = new DOMDocument("1.0");
+    $doc->preserveWhiteSpace = false;
+    $doc->formatOutput = true;
+    $doc->loadxml($xml->asXML());
+    $doc->save("users.xml");
+
+    echo "Korisnik kreiran";
+} 
+?>
+
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Marin Muheljić XML</title>
+        <meta charset="UTF-8" />
+    </head>
+    <body>
+        <h1>Registracija</h1>
+        <form method="post">
+            <input name="username" type="text" placeholder="Korisničko ime">
+            <br>
+            <input name="password" type="password" placeholder="Lozinka">
+            <br>
+            <button type="submit" name="gumb">Registriraj se</button>
+            <br>
+            <a href="Untitled-1.php">Prijava</a>
+        </form>
+    </body>
+</html>
