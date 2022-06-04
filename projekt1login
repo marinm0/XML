@@ -1,0 +1,61 @@
+<?php
+
+$username="";
+$password="";
+
+if($_SERVER["REQUEST_METHOD"]== "POST"){
+    $ans=$_POST;
+    if ((empty($ans["username"])) || (empty($ans["password"]))){
+        echo "Ispunite polja:";
+    }else{
+        $username = $ans["username"];
+        $password = $ans["password"];
+
+        provjera($username, $password);
+    }
+}
+function provjera($username, $password){
+
+    $xml=simplexml_load_file("users.xml");
+
+    foreach ($xml->user as $user){
+
+        $user_name = $user->username;
+        $pass_word = $user->password;
+
+        if($user_name==$username){
+                if($pass_word==$password){
+                    echo "Uspješno ste prijavljeni";
+                    return;
+                }else{
+                    echo "Pogrešno ime ili lozinka";
+                    return;
+                }
+            }
+        }
+    echo "Nepostojeći korisnik";
+    return;
+
+} 
+?>
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Marin Muheljić XML</title>
+        <meta charset="UTF-8" />
+    </head>
+    <body>
+        <h1>Log in</h1>
+        <form action="" method="post">
+            <input id="user" name="username" type="text" placeholder="korisničko ime">
+            <br>
+            <input id="password" name="password" type="password" placeholder="Sifra">
+            <br>
+            <input name="submit" type="submit" value="Log in">
+            <br>
+            <a href="register.php">Registriracija</a>
+        </form>
+    </body>
+</html>
